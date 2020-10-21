@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  AWSLambdaFullAccessRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: documentManagerLambdaFullAccessRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSLambdaFullAccess'
+
+  documentManager:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: documentManager
+      Handler: lambda_handler.lambda_handler
+      Role: !GetAtt AWSLambdaFullAccessRole.Arn
+      Code:
+        S3Bucket: document-manager-demo
+        S3Key: documentManager.zip
+      Runtime: python3.8
+      Timeout: '180'
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          OWN_API_KEY: '35069e4954fa6ab45641c8d5950c262c'
+
+  APIdocumentManagerPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref documentManager
+      Principal: apigateway.amazonaws.com
+
+  documentManagerAPI:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: documentManagerAPI
+      Description: documentManagerAPI implementation
+
+  APIdocumentManagerResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt
+        - documentManagerAPI
+        - RootResourceId
+      PathPart: document
+      RestApiId: !Ref documentManagerAPI
+
+  APIdocumentManagerPOST:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: "NONE"
+      HttpMethod: POST
+      RestApiId: !Ref documentManagerAPI
+      ResourceId: !Ref APIdocumentManagerResource
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "documentManager.Arn"
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ''
+            StatusCode: '200'
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+
+
+  APIdocumentManagerOPTIONS:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      RestApiId: !Ref documentManagerAPI
+      ResourceId: !Ref APIdocumentManagerResource
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ''
+            StatusCode: '200'
+        PassthroughBehavior: NEVER
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+          StatusCode: '200'
+
+  APIDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - APIdocumentManagerPOST
+    Properties:
+      RestApiId: !Ref documentManagerAPI
+
+Outputs:
+  lambdaArn:
+    Value: !GetAtt "documentManager.Arn"
