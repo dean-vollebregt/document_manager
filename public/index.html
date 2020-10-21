@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/document-manager.css">
+
+    <!-- Load header and footer -->
+
+    <!--Aws Cognito SDK-->
+    <script src="javascript/aws-sdk/amazon-cognito-identity.min.js"></script>
+
+    <!--fetch-->
+    <script src="javascript/api.js"></script>
+
+    <title>Manage S3 Content</title>
+</head>
+
+<body>
+
+
+<header class="navigation-allowed">
+    <!--Content Dynamically Loaded-->
+</header>
+
+<div id="main" style="min-height: 100vh">
+    <div id="loadingDiv"><h1>Loading .....</h1></div>
+    <div id="manageS3ContentPanel" class="container d-none">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12">
+                <h2>Manage S3 Content</h2>
+                <form novalidate onsubmit="return false">
+                    <div style="width:50%; float:left">
+                        <div style="width:50%">
+                            <label for="title" class="red-astrix">Title</label>
+                            <input type="text" class="form-control" id="title" maxlength="50">
+                        </div>
+                        <div>
+                            <label for="description" class="red-astrix">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="3" required maxlength="200"></textarea>
+                        </div>
+                    </div>
+                    <div style="width:47.5%; float:right">
+                        <div>
+                            <label for="uploadFile">Upload File</label>
+                            <input type="file" class="form-control-file" id="uploadFile">
+                        </div>
+
+                        <div class="d-inline-block" style="float: left; margin-top: 87px" >
+                            <button class="btn" type="button" style="vertical-align: 0" onclick="validateForm()">Add</button>
+                            <button class="btn" type="button" style="vertical-align: 0" onclick="resetForm()">Clear</button>
+                        </div>
+                    </div>
+                </form>
+                <div style="padding-top: 200px">
+
+                </div>
+                <div id="tableOverflow">
+                    <table id="data" class="table table-bordered adminTable" style="overflow-y: auto">
+                        <thead class="table-active">
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Reference</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <!--Content Dynamically Loaded-->
+</footer>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="javascript/jquery-3.2.1.js"></script>
+<script src="javascript/bootstrapPopper.js"></script>
+<script src="javascript/bootstrap.js"></script>
+
+<!--Index javascript methods -->
+<script type="text/javascript" src="javascript/document-manager.js"></script>
+<script type="text/javascript" src="javascript/document-manager-service.js"></script>
+</body>
+</html>

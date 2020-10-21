@@ -1,0 +1,34 @@
+@media screen and (max-width: 1823px) {
+
+    #loadingDiv {
+        padding-top: 15vh;
+        padding-left: 10vw;
+    }
+
+    #manageS3ContentPanel {
+        padding-top: 12vh;
+    }
+
+    #tableOverflow {
+        overflow-y: auto;
+        height: 45vh;
+    }
+}
+
+/*Larger than laptop*/
+@media screen and (min-width: 1824px) {
+
+    #loadingDiv {
+        padding-top: 10vh;
+        padding-left: 8vw;
+    }
+
+    #manageS3ContentPanel {
+        padding-top: 10vh;
+    }
+
+    #tableOverflow {
+        overflow-y: auto;
+        height: 60vh
+    }
+}
