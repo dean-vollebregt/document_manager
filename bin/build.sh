@@ -9,7 +9,6 @@ function build_document_manager() {
     deactivate
     aws s3 sync . s3://document-manager-demo --acl private --exclude "*" --include "documentManager.zip"
     rm -rf documentManager.zip
-    pip3.8 uninstall -r requirements.txt -t ./
 }
 
 build_document_manager

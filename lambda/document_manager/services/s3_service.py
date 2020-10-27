@@ -1,13 +1,16 @@
+import json
+import base64
 import boto3
 
-s3 = boto3.client('s3',  region_name='ap-southeast-2')
+s3 = boto3.resource('s3', region_name='ap-southeast-2')
 
-def upload_image():
+
+def upload_file(event):
+    print('fileName', event["fileName"])
+    print('fileData', event["fileData"])
 
     try:
-        s3.upload_file(
-            Filename="./test.txt",
-            Bucket="document-manager-demo",
-            Key="images/test.txt")
+        obj = s3.Object("document-manager-demo", event["fileName"])
+        obj.put(Body=base64.b64decode(event["fileData"]))
     except Exception as e:
         print('Error uploading to S3: ', e)

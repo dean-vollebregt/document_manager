@@ -1,4 +1,4 @@
-let API_ENDPOINT = 'https://dezv22zhqg.execute-api.ap-southeast-2.amazonaws.com/dev';
+let API_ENDPOINT = 'https://igpggz2nhl.execute-api.ap-southeast-2.amazonaws.com/prod';
 
 async function apiGateway(path, headers, body){
 

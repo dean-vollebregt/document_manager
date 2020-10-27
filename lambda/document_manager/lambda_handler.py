@@ -1,18 +1,11 @@
 import json
 import boto3
 
-
-dynamodb = boto3.resource('dynamodb')
+from services.s3_service import upload_file
 
 def lambda_handler(event, context):
 
-    table = dynamodb.Table('document-manager')
-
-    response = table.get_item(
-        Key={
-            'title': 'data'
-        }
-    )
+    upload_file(event)
 
     return {
         'statusCode': 200,

@@ -1,6 +1,6 @@
+
 async function onPageLoad() {
     try {
-
         hideLoadingDiv()
         showManageS3ContentPanel()
 
@@ -61,11 +61,11 @@ async function setStorageType(){
 
     try {
         let base64String = await getBase64();
-        let pdfLocation  = await createS3Object(base64String[0], base64String[1], accessToken, cognitoToken);
-        let metadata = await fileOrHyperLinkDataMetadata(pdfLocation);
-        let response = await setFileOrHyperLinkMetadata(metadata, accessToken, cognitoToken);
-        let allItemsArray = await getFilesAndHyperlinks(accessToken, cognitoToken);
-        renderFilesAndHyperlinks(allItemsArray.Items);
+        let pdfLocation  = await createS3Object(base64String[0], base64String[1]);
+        //let metadata = await fileMetadata(pdfLocation);
+        //let response = await setFileMetadata(metadata);
+        //let allItemsArray = await getFilesAndHyperlinks();
+        //renderFilesAndHyperlinks(allItemsArray.Items);
 
     } catch(err){
         console.log(error)
@@ -87,7 +87,7 @@ async function getBase64() {
     });
 }
 
-function fileOrHyperLinkDataMetadata(pdfLocation) {
+function fileMetadata(pdfLocation) {
 
     let metadata =  {
         "title": document.getElementById("title").value,
@@ -100,15 +100,15 @@ function fileOrHyperLinkDataMetadata(pdfLocation) {
     return metadata
 }
 
-async function onDeleteOrHyperlink(selectedRow) {
+async function deleteFile(selectedRow) {
 
     let selectedRowTitle = selectedRow.getElementsByClassName("title")[0].innerText;
     let resourceType = selectedRow.getElementsByClassName("type")[0].innerText;
     let fileName = selectedRow.getElementsByClassName("delete")[0].id;
 
     try {
-        await deleteFileAndHyperlinkMetadata(selectedRowTitle, accessToken, cognitoToken);
-        if (fileName !== "none") await deleteS3Object(fileName, accessToken, cognitoToken);
+        await deleteFileAndHyperlinkMetadata(selectedRowTitle);
+        if (fileName !== "none") await deleteS3Object(fileName);
         selectedRow.innerHTML = '';
     } catch (err) {
         console.log(err)
