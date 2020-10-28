@@ -1,11 +1,14 @@
 import boto3
 
-def dynamo_service():
+dynamodb = boto3.resource('dynamodb')
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('document-manager')
+def store_file_metadata(event):
 
-    response = table.get_item(
-        Key={
-            'title': 'data'
-        })
+    try:
+        table = dynamodb.Table('document-manager')
+        response = table.put_item(
+            Item=event["metadata"]
+        )
+        return response
+    except Exception as e:
+        print('Error saving metadata to DynamoDB: ', e)

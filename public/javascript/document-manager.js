@@ -1,4 +1,3 @@
-
 async function onPageLoad() {
     try {
         hideLoadingDiv()
@@ -62,8 +61,8 @@ async function setStorageType(){
     try {
         let base64String = await getBase64();
         let pdfLocation  = await createS3Object(base64String[0], base64String[1]);
-        //let metadata = await fileMetadata(pdfLocation);
-        //let response = await setFileMetadata(metadata);
+        let metadata = await fileMetadata(base64String[1]);
+        let response = await setMetadata(metadata);
         //let allItemsArray = await getFilesAndHyperlinks();
         //renderFilesAndHyperlinks(allItemsArray.Items);
 
@@ -87,14 +86,14 @@ async function getBase64() {
     });
 }
 
-function fileMetadata(pdfLocation) {
+function fileMetadata(fileName) {
 
     let metadata =  {
         "title": document.getElementById("title").value,
         "description": document.getElementById("description").value,
-        "reference": pdfLocation.Location,
+        "reference": "https://document-manager-demo.s3-ap-southeast-2.amazonaws.com/" + fileName,
         "date_created": new Date(Date.now()).toLocaleDateString(),
-        "fileName": (fileOrHyperlink === 'File' ? document.getElementById("uploadFile").files[0].name : "none")
+        "fileName": fileName
     };
 
     return metadata

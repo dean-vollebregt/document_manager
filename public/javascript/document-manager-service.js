@@ -21,27 +21,25 @@ async function createS3Object(base64String, fileName) {
     const headers = {};
 
     const body = {
-        "operation": "createS3Object",
+        "operation": "create_s3_object",
         "fileName": fileName,
         "fileData": base64String,
     };
-    debugger;
+
     return await apiGateway(path, headers, body);
 }
 
-async function setFileOrHyperLinkMetadata(metadata, accessToken, cognitoToken) {
+async function setMetadata(metadata) {
 
     const path = '/document';
 
-    const headers = {
-        'Authorization': cognitoToken
-    };
-    const body = {
-        "operation": "setFileOrHyperLinkMetadata",
-        "metadata": metadata,
-        "accessToken": accessToken
-    };
+    const headers = {};
 
+    const body = {
+        "operation": "set_meta_data",
+        "metadata": metadata
+    };
+    debugger
     return await apiGateway(path, headers, body);
 }
 
@@ -52,6 +50,7 @@ async function deleteFileAndHyperlinkMetadata(selectedRowTitle, accessToken, cog
     const headers = {
         'Authorization': cognitoToken
     };
+
     const body = {
         "operation": "deleteFileAndHyperlinkMetadata",
         "title": selectedRowTitle,
@@ -76,11 +75,3 @@ async function deleteS3Object(fileName, accessToken, cognitoToken) {
 
     return await apiGateway(path, headers, body);
 }
-
-module.exports = {
-    getFilesAndHyperlinks,
-    createS3Object,
-    setFileOrHyperLinkMetadata,
-    deleteFileAndHyperlinkMetadata,
-    deleteS3Object
-};

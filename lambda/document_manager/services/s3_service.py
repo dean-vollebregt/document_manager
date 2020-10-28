@@ -6,8 +6,6 @@ s3 = boto3.resource('s3', region_name='ap-southeast-2')
 
 
 def upload_file(event):
-    print('fileName', event["fileName"])
-    print('fileData', event["fileData"])
 
     try:
         obj = s3.Object("document-manager-demo", event["fileName"])
