@@ -2,9 +2,8 @@ async function onPageLoad() {
     try {
         hideLoadingDiv()
         showManageS3ContentPanel()
-
-        let allItemsArray = await getFilesAndHyperlinks(accessToken, cognitoToken);
-        renderFilesAndHyperlinks(allItemsArray.Items);
+        let allItemsArray = await getFilesAndS3Links();
+        renderFilesAndS3links(allItemsArray);
         //hideLoadingDiv()
         setTimeout(showManageS3ContentPanel, 500);
     } catch (err) {
@@ -12,7 +11,7 @@ async function onPageLoad() {
     }
 }
 
-function renderFilesAndHyperlinks(allItemsArray){
+function renderFilesAndS3links(allItemsArray){
 
     document.getElementById("tableBody").innerHTML ='';
     document.getElementsByTagName("FORM")[0].reset();
@@ -24,11 +23,11 @@ function renderFilesAndHyperlinks(allItemsArray){
     allItemsArray.forEach(function(item){
         let individualItemRow =
          `<tr>
-            <td class="title">${item.title.S}</td>
-            <td class="description">${item.description.S}</td>
-            <td class="reference"><a href="${item.reference.S}">${item.reference.S}</a></td>
-            <td class="date_created">${item.date_created.S}</td>
-            <td class="delete" id="${item.fileName.S}"><button onclick="onDeleteOrHyperlink(this.parentElement.parentNode)">Delete</button></td>
+            <td class="title">${item.title}</td>
+            <td class="description">${item.description}</td>
+            <td class="reference"><a href="${item.reference}">${item.reference}</a></td>
+            <td class="date_created">${item.date_created}</td>
+            <td class="delete" id="${item.fileName}"><button onclick="deleteFile(this.parentElement.parentNode)">Delete</button></td>
          </tr>` ;
 
         document.getElementById("tableBody").innerHTML += individualItemRow
@@ -52,19 +51,19 @@ async function validateForm() {
         alert('Title or Description is incomplete');
     }
     else {
-        return await setStorageType();
+        return await storeItem();
     }
 }
 
-async function setStorageType(){
+async function storeItem(){
 
     try {
         let base64String = await getBase64();
         let pdfLocation  = await createS3Object(base64String[0], base64String[1]);
         let metadata = await fileMetadata(base64String[1]);
         let response = await setMetadata(metadata);
-        //let allItemsArray = await getFilesAndHyperlinks();
-        //renderFilesAndHyperlinks(allItemsArray.Items);
+        let allItemsArray = await getFilesAndS3Links();
+        renderFilesAndS3links(allItemsArray);
 
     } catch(err){
         console.log(error)
@@ -102,12 +101,11 @@ function fileMetadata(fileName) {
 async function deleteFile(selectedRow) {
 
     let selectedRowTitle = selectedRow.getElementsByClassName("title")[0].innerText;
-    let resourceType = selectedRow.getElementsByClassName("type")[0].innerText;
     let fileName = selectedRow.getElementsByClassName("delete")[0].id;
 
     try {
-        await deleteFileAndHyperlinkMetadata(selectedRowTitle);
-        if (fileName !== "none") await deleteS3Object(fileName);
+        await deleteFileMetadata(selectedRowTitle);
+        await deleteS3Object(fileName);
         selectedRow.innerHTML = '';
     } catch (err) {
         console.log(err)

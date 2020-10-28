@@ -1,14 +1,11 @@
-async function getFilesAndHyperlinks() {
+async function getFilesAndS3Links() {
 
-    const path = '/admin';
+    const path = '/document';
 
-    const headers = {
-        'Authorization': cognitoToken
-    };
+    const headers = {};
 
     const body = {
-        'operation': 'getFilesAndHyperlinks',
-        'accessToken': accessToken
+        'operation': 'read_file_metadata',
     };
 
     return await apiGateway(path, headers, body);
@@ -21,7 +18,7 @@ async function createS3Object(base64String, fileName) {
     const headers = {};
 
     const body = {
-        "operation": "create_s3_object",
+        "operation": "upload_file",
         "fileName": fileName,
         "fileData": base64String,
     };
@@ -36,41 +33,36 @@ async function setMetadata(metadata) {
     const headers = {};
 
     const body = {
-        "operation": "set_meta_data",
+        "operation": "store_file_metadata",
         "metadata": metadata
     };
-    debugger
-    return await apiGateway(path, headers, body);
-}
-
-async function deleteFileAndHyperlinkMetadata(selectedRowTitle, accessToken, cognitoToken) {
-
-    const path = '/document';
-
-    const headers = {
-        'Authorization': cognitoToken
-    };
-
-    const body = {
-        "operation": "deleteFileAndHyperlinkMetadata",
-        "title": selectedRowTitle,
-        "accessToken": accessToken
-    };
 
     return await apiGateway(path, headers, body);
 }
 
-async function deleteS3Object(fileName, accessToken, cognitoToken) {
+async function deleteFileMetadata(title) {
 
     const path = '/document';
 
-    const headers = {
-        'Authorization': cognitoToken
-    };
+    const headers = {};
+
     const body = {
-        "operation": "deleteS3Object",
-        "fileName": fileName,
-        "accessToken": accessToken
+        "operation": "delete_file_metadata",
+        "title": title
+    };
+
+    return await apiGateway(path, headers, body);
+}
+
+async function deleteS3Object(fileName) {
+
+    const path = '/document';
+
+    const headers = {};
+
+    const body = {
+        "operation": "delete_file",
+        "fileName": fileName
     };
 
     return await apiGateway(path, headers, body);

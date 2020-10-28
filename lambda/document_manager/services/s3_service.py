@@ -12,3 +12,12 @@ def upload_file(event):
         obj.put(Body=base64.b64decode(event["fileData"]))
     except Exception as e:
         print('Error uploading to S3: ', e)
+
+
+def delete_file(event):
+
+    try:
+        response = s3.Object("document-manager-demo", event["fileName"]).delete()
+        return response
+    except Exception as e:
+        print('Error deleting file from S3: ', e)
