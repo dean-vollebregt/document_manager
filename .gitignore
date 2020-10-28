@@ -1,11 +1,6 @@
 # Editor file
 .idea
 
-# Dependency directories
-**/node_modules
-
-# S3 Zip Files
-flatdna-backend.zip
-
-
-
+# virtual Environment
+*/v-env/*
+/lambda/document_manager/v-env/
