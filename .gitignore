@@ -4,3 +4,5 @@
 # virtual Environment
 */v-env/*
 /lambda/document_manager/v-env/
+!/public/javascript/bootstrapPopper.js
+!/public/javascript/jquery-3.2.1.js
