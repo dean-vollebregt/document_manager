@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 function build_document_manager() {
-    cd lambda/document_manager
+    cd lambdas/document_manager
     python3.8 -m venv v-env && source v-env/bin/activate
     pip3.8 install -r requirements.txt -t ./
     zip -r documentManager.zip * -x "v-env*" -x "*.dist-info*"

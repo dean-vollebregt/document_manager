@@ -9,7 +9,8 @@ def upload_file(event):
 
     try:
         obj = s3.Object("document-manager-demo", event["fileName"])
-        obj.put(Body=base64.b64decode(event["fileData"]))
+        response = obj.put(Body=base64.b64decode(event["fileData"]))
+        return response
     except Exception as e:
         print('Error uploading to S3: ', e)
 
