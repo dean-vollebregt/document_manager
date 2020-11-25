@@ -16,10 +16,3 @@ def lambda_handler(event, context):
         return delete_file_metadata(event)
     else:
         print("Operation not found")
-
-
-#lambda_handler({ "operation": "upload_file", "fileName": "test.txt", "fileData": "aGVsbG8gd29ybGQK"}, {})
-lambda_handler({"operation": "store_file_metadata", "metadata": { "title": "test", "description": "test", "reference": "https://document-manager-demo.s3-ap-southeast-2.amazonaws.com/test.txt", "date_created": "27/10/2020", "fileName": "test.txt"}}, {})
-#apple = lambda_handler({ "operation": "read_file_metadata"}, {})
-lambda_handler({"operation": "delete_file_metadata", "title": "test"}, {})
-#lambda_handler({"operation": "delete_file", "fileName": "test.txt"}, {})
