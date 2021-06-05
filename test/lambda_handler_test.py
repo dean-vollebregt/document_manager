@@ -38,4 +38,4 @@ class LambdaHandlerTestCase(unittest.TestCase):
         with patch('lambdas.document_manager.services.dynamo_service.delete_file_metadata') as delete_file_metadata_mock:
             self.mock_event = {"operation": "delete_file_metadata"}
             lambda_handler(self.mock_event, self.mock_context)
-            delete_file_metadata_mock.assert_called_once(), 'The read_file_metadata function is invoked'
+            delete_file_metadata_mock.assert_called_once(), 'The delete_file_metadata function is invoked'
