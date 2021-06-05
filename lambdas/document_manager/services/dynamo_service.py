@@ -1,35 +1,49 @@
 import boto3
 
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('document-manager')
 
 def store_file_metadata(event):
 
+    dynamodb = boto3.client('dynamodb', region_name='ap-southeast-2')
+
     try:
-        response = table.put_item(
-            Item=event["metadata"]
+        response = dynamodb.put_item(
+            TableName='document-manager',
+            Item={
+                'title': {'S': event['metadata']['title']}
+            },
+            ReturnValues='ALL_OLD'
         )
-        return response
+        return response['ResponseMetadata']['HTTPStatusCode']
+
     except Exception as e:
         print('Error saving metadata to DynamoDB: ', e)
 
 
 def read_file_metadata():
 
+    dynamodb = boto3.client('dynamodb', region_name='ap-southeast-2')
+
     try:
-        response = table.scan()
+        response = dynamodb.scan(
+            TableName='document-manager',
+        )
         return response["Items"]
     except Exception as e:
         print('Error reading metadata from DynamoDB: ', e)
 
 
 def delete_file_metadata(event):
+
+    dynamodb = boto3.client('dynamodb', region_name='ap-southeast-2')
+
     try:
-        response = table.delete_item(
+        response = dynamodb.delete_item(
+            TableName='document-manager',
             Key={
-                'title': event["title"]
-            }
+                'title': {'S': event['metadata']['title']}
+            },
+            ReturnValues='ALL_OLD'
         )
-        return response
+        return response['ResponseMetadata']['HTTPStatusCode']
     except Exception as e:
-        print('Error deleting metadata from DynamoDB: ', e)
+        print('Error reading metadata from DynamoDB: ', e)
