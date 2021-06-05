@@ -3,7 +3,6 @@ from services.dynamo_service import store_file_metadata, read_file_metadata, del
 
 
 def lambda_handler(event, context):
-
     try:
         if event["operation"] == "upload_file":
             return upload_file(event)
@@ -20,4 +19,3 @@ def lambda_handler(event, context):
 
     except Exception as e:
         print('Error processing event: ', e)
-
