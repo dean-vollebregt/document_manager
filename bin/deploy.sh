@@ -20,7 +20,7 @@ function sync_public_assets() {
 function main(){
   deploy_document_manager
   update_cloudformation_stack
-  #sync_public_assets
+  sync_public_assets
 }
 
 main
