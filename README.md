@@ -1,11 +1,13 @@
 # Document manager 
 
-A very simple project to demonstrate my build, test and deployment abilities 
+A very simple concept project to demonstrate on a small scale my build, test and deployment abilities 
 
-* bin contains a scripts to buid, test and deploy the application
+* bin contains the scripts to build, test and deploy the application
 
-* lambda contains the source code for an AWS lambda function that uploads, modify and delete services to the fron end
+* lambda contains the source code of an AWS lambda function that provides file upload, modify and delete services
 
-* public contains the HTML, CSS and Javascript needed to create the user interface
+* public contains the HTML, CSS and Javascript used to create the user interface
+
+The user interface can be viewed here:
 
 https://document-manager-demo.s3-ap-southeast-2.amazonaws.com/index.html
